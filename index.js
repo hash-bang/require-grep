@@ -35,7 +35,16 @@ module.exports = function(grep, options, callback) {
 		global: false,
 		globalPaths: process.env.NODE_PATH.split(/\s*:\s*/),
 		localPaths: [fspath.join(__dirname, 'node_modules')],
+		multiple: false,
 	});
+	// }}}
+	// Settings shortcuts (multiple) {{{
+	if (settings.multiple) {
+		settings.array = true;
+		settings.failOne = false;
+		settings.failMultiple = false;
+		settings.failNone = false;
+	}
 	// }}}
 
 	async()

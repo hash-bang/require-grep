@@ -28,6 +28,19 @@ describe('require-grep - resolve local modules', function() {
 		});
 	});
 
+	it('should resolve mutiple lodash plugins (globally)', function(finish) {
+		requireGrep('lodash', {
+			global: true,
+			local: false,
+			multiple: true,
+		}, function(err, paths) {
+			expect(err).to.be.not.ok;
+			expect(paths).to.be.an.array;
+			expect(paths).to.have.length.of.at.least(1);
+			finish();
+		});
+	});
+
 	it('should resolve mocha (locally)', function(finish) {
 		requireGrep('mocha', {
 			global: false,
