@@ -5,9 +5,9 @@ var fspath = require('path');
 
 module.exports = function(grep, options, callback) {
 	// Argument mangling {{{
-	if (_.isString(grep) && _.isObject(options) && _.isFunction(callback)) {
+	if ((_.isString(grep) || _.isArray(grep) || _.isRegExp(grep)) && _.isObject(options) && _.isFunction(callback)) {
 		// Perfect call - skip
-	} else if (_.isString(grep) && _.isFunction(options)) {
+	} else if ((_.isString(grep) || _.isArray(grep) || _.isRegExp(grep)) && _.isFunction(options)) {
 		// Skipped options
 		callback = options;
 		options = {};
