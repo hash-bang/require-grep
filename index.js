@@ -68,7 +68,8 @@ module.exports = function(grep, options, callback) {
 						settings.greps.some(function(grep) { // Grep by expressions
 							return (
 								(_.isRegExp(grep) && grep.test(file)) ||
-								(_.isString(grep) && file == grep)
+								(_.isString(grep) && file == grep) ||
+								(_.isFunction(grep) && grep(file))
 							);
 						})
 					)

@@ -51,4 +51,34 @@ describe('require-grep - resolve local modules', function() {
 			finish();
 		});
 	});
+
+	it('should resolve mocha or chai', function(finish) {
+		requireGrep(/^mocha|chai$/, {
+			global: false,
+			local: true,
+			multiple: true,
+		}, function(err, paths) {
+			expect(err).to.be.not.ok;
+			expect(paths).to.be.an.array;
+			expect(paths).to.have.length.of.at.least(2);
+			finish();
+		});
+	});
+
+	it('should resolve mocha, chai and lodash using mixed grep methods', function(finish) {
+		requireGrep([
+			'mocha',
+			/hai$/,
+			function(p) { return p == 'lodash' },
+		], {
+			global: false,
+			local: true,
+			multiple: true,
+		}, function(err, paths) {
+			expect(err).to.be.not.ok;
+			expect(paths).to.be.an.array;
+			expect(paths).to.have.length.of.at.least(3);
+			finish();
+		});
+	});
 });
