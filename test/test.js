@@ -81,4 +81,15 @@ describe('require-grep - resolve local modules', function() {
 			finish();
 		});
 	});
+
+	it('should not resolve lodash (globally with no NODE_PATH)', function(finish) {
+		process.env.NODE_PATH = '';
+		requireGrep('lodash', {
+			global: true,
+			local: false,
+		}, function(err, path) {
+			expect(err).to.be.ok;
+			finish();
+		});
+	});
 });

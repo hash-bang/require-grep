@@ -33,7 +33,7 @@ module.exports = function(grep, options, callback) {
 		failDirJSON: false,
 		local: true,
 		global: false,
-		globalPaths: process.env.NODE_PATH.split(/\s*:\s*/),
+		globalPaths: process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/) : '',
 		localPaths: [fspath.join(__dirname, 'node_modules')],
 		multiple: false,
 	});
@@ -51,8 +51,8 @@ module.exports = function(grep, options, callback) {
 		// Calculate paths {{{
 		.then('paths', function(next) {
 			next(null, [].concat(
-				settings.local ? settings.localPaths.map(function(p) { return fspath.resolve(p) }) : [],
-				settings.global ? settings.globalPaths.map(function(p) { return fspath.resolve(p) }) : []
+				settings.local && settings.localPaths ? settings.localPaths.map(function(p) { return fspath.resolve(p) }) : [],
+				settings.global && settings.globalPaths ? settings.globalPaths.map(function(p) { return fspath.resolve(p) }) : []
 			));
 		})
 		// }}}
