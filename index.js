@@ -33,7 +33,7 @@ module.exports = function(grep, options, callback) {
 		failDirJSON: false,
 		local: true,
 		global: false,
-		globalPaths: process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/) : '',
+		globalPaths: process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/) : ['/usr/lib/node_modules'],
 		localPaths: [fspath.join(__dirname, 'node_modules')],
 		multiple: false,
 	});
