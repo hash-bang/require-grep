@@ -13,9 +13,16 @@ var options = {
 program
 	.version(require('./package.json').version)
 	.usage('[module...]')
+	.option('-l, --local', 'Enable searching locally')
+	.option('-L, --local-only', 'Search local only (implies `-l --no-global`)')
 	.option('-j, --json', 'Output JSON data')
+	.option('-r, --regexp', 'Interpret program arguments as regular expressions instead of strings')
 	.option('-v, --verbose', 'Be verbose')
+	.option('--no-global', 'Disable searching globally')
 	.parse(process.argv);
+
+if (program.global === false || program.localOnly) options.global = false;
+if (program.local || program.localOnly) options.local = true;
 
 async()
 	.use(require('async-chainable-flush'))
@@ -24,7 +31,7 @@ async()
 	.forEach(program.args, function(next, arg) {
 		var task = this;
 		if (program.verbose) console.log('Search for', arg);
-		requireGrep(program.args, options, function(err, res) {
+		requireGrep(program.regexp ? new RegExp(arg) : arg, options, function(err, res) {
 			if (err) return next(err);
 			if (!options.json && options.multiple && res.length == 1) {
 				task.searches[arg] = res[0]; // Auto flatten results if only one
