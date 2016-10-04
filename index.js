@@ -1,25 +1,10 @@
 var _ = require('lodash');
+var argy = require('argy');
 var async = require('async-chainable');
 var fs = require('fs');
 var fspath = require('path');
 
-module.exports = function(grep, options, callback) {
-	// Argument mangling {{{
-	if ((_.isString(grep) || _.isArray(grep) || _.isRegExp(grep)) && _.isObject(options) && _.isFunction(callback)) {
-		// Perfect call - skip
-	} else if ((_.isString(grep) || _.isArray(grep) || _.isRegExp(grep)) && _.isFunction(options)) {
-		// Skipped options
-		callback = options;
-		options = {};
-	} else if (_.isObject(grep) && _.isFunction(options)) {
-		// Skipped grep
-		callback = options;
-		options = grep;
-		grep = null;
-	} else {
-		throw new Error('Unknown call method. Invoke as `requireGrep(grep, [options], callback)`');
-	}
-	// }}}
+module.exports = argy('[string|array|regexp] [object] callback', function(grep, options, callback) {
 	// Settings defaults {{{
 	var settings = _.defaults(options || {}, {
 		callback: callback || _.noop,
@@ -116,4 +101,4 @@ module.exports = function(grep, options, callback) {
 			settings.callback(null, this.modules[0]);
 		});
 		// }}}
-};
+});
