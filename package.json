@@ -1,6 +1,6 @@
 {
   "name": "require-grep",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Minimal NodeJS module finder with grepping capabilities",
   "main": "index.js",
   "scripts": {
@@ -24,11 +24,13 @@
   },
   "homepage": "https://github.com/hash-bang/require-grep#readme",
   "devDependencies": {
+    "async-chainable-flush": "^1.0.0",
     "chai": "^3.5.0",
+    "commander": "^2.9.0",
     "mocha": "^2.5.3"
   },
   "dependencies": {
     "async-chainable": "^1.8.1",
-    "lodash": "^4.13.1"
+    "lodash": "^4.16.3"
   }
 }
