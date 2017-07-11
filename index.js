@@ -18,7 +18,7 @@ module.exports = argy('[string|array|regexp] [object] callback', function(grep, 
 		failDirJSON: false,
 		local: true,
 		global: false,
-		globalPaths: process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/) : ['/usr/lib/node_modules'],
+		globalPaths: process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/) : require('module').globalPaths,
 		localPaths: [fspath.join(__dirname, 'node_modules')],
 		multiple: false,
 	});
