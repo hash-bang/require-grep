@@ -1,6 +1,6 @@
 {
   "name": "require-grep",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Minimal NodeJS module finder with grepping capabilities",
   "main": "index.js",
   "scripts": {
