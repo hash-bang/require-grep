@@ -1,7 +1,9 @@
 var expect = require('chai').expect;
+var mlog = require('mocha-logger');
 var requireGrep = require('..');
 
 describe('require-grep - resolve local modules', function() {
+
 	it('should find all global modules', function(finish) {
 		requireGrep({
 			global: true,
@@ -9,11 +11,13 @@ describe('require-grep - resolve local modules', function() {
 			array: true,
 			failNone: false,
 			failOne: false,
-			failMultiple: false
+			failMultiple: false,
 		}, function(err, paths) {
 			expect(err).to.be.not.ok;
-			expect(paths).to.be.an.array;
+			expect(paths).to.be.an.instanceOf(Array);
+			expect(paths).to.have.length.above(0);
 			finish();
+			mlog.log('=>', paths.length, 'items');
 		});
 	});
 
@@ -21,10 +25,12 @@ describe('require-grep - resolve local modules', function() {
 		requireGrep('lodash', {
 			global: true,
 			local: false,
+			failMultiple: false,
 		}, function(err, path) {
 			expect(err).to.be.not.ok;
 			expect(path).to.be.a.string;
 			finish();
+			mlog.log('=>', path);
 		});
 	});
 
@@ -35,9 +41,10 @@ describe('require-grep - resolve local modules', function() {
 			multiple: true,
 		}, function(err, paths) {
 			expect(err).to.be.not.ok;
-			expect(paths).to.be.an.array;
+			expect(paths).to.be.an.instanceOf(Array);
 			expect(paths).to.have.length.of.at.least(1);
 			finish();
+			mlog.log('=>', paths.join(' '));
 		});
 	});
 
@@ -49,6 +56,7 @@ describe('require-grep - resolve local modules', function() {
 			expect(err).to.be.not.ok;
 			expect(path).to.be.a.string;
 			finish();
+			mlog.log('=>', path);
 		});
 	});
 
@@ -59,9 +67,10 @@ describe('require-grep - resolve local modules', function() {
 			multiple: true,
 		}, function(err, paths) {
 			expect(err).to.be.not.ok;
-			expect(paths).to.be.an.array;
+			expect(paths).to.be.an.instanceOf(Array);
 			expect(paths).to.have.length.of.at.least(2);
 			finish();
+			mlog.log('=>', paths.join(' '));
 		});
 	});
 
@@ -76,9 +85,10 @@ describe('require-grep - resolve local modules', function() {
 			multiple: true,
 		}, function(err, paths) {
 			expect(err).to.be.not.ok;
-			expect(paths).to.be.an.array;
+			expect(paths).to.be.an.instanceOf(Array);
 			expect(paths).to.have.length.of.at.least(3);
 			finish();
+			mlog.log('=>', paths.join(' '));
 		});
 	});
 
@@ -89,6 +99,7 @@ describe('require-grep - resolve local modules', function() {
 		}, function(err, path) {
 			expect(err).to.be.ok;
 			finish();
+			mlog.log('=>', path);
 		});
 	});
 
@@ -97,10 +108,13 @@ describe('require-grep - resolve local modules', function() {
 		requireGrep('lodash', {
 			global: true,
 			local: false,
+			failMultiple: false,
 		}, function(err, path) {
 			expect(err).to.be.not.ok;
 			expect(path).to.be.a.string;
 			finish();
+			mlog.log('=>', path);
 		});
 	});
+
 });

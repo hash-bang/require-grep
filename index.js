@@ -3,12 +3,13 @@ var argy = require('argy');
 var async = require('async-chainable');
 var fs = require('fs');
 var fspath = require('path');
+var globalPrefix = require('global-prefix');
 
 module.exports = argy('[string|array|regexp] [object] callback', function(grep, options, callback) {
 	// Settings defaults {{{
 	var settings = _.defaults(options || {}, {
 		callback: callback || _.noop,
-		greps: _.castArray(grep) || [],
+		greps: grep ? _.castArray(grep) : [],
 		failNone: true,
 		array: false,
 		failOne: false,
@@ -18,7 +19,10 @@ module.exports = argy('[string|array|regexp] [object] callback', function(grep, 
 		failDirJSON: false,
 		local: true,
 		global: false,
-		globalPaths: process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/) : require('module').globalPaths,
+		globalPaths:
+			process.env.NODE_PATH ? process.env.NODE_PATH.split(/\s*:\s*/)
+			: module.globalPaths ? module.globalPaths
+			: ['/usr/lib/node_modules'],
 		localPaths: [fspath.join(__dirname, 'node_modules')],
 		multiple: false,
 	});
@@ -33,12 +37,26 @@ module.exports = argy('[string|array|regexp] [object] callback', function(grep, 
 	// }}}
 
 	async()
+		// Special case to calculate global paths from `npm prefix -g` {{{
+		.then(function(next) {
+			if (!settings.global) return next(); // Not looking for global anyway
+
+			settings.globalPaths.unshift(globalPrefix + '/lib/node');
+			settings.globalPaths.unshift(globalPrefix + '/node_modules');
+			settings.globalPaths.unshift(globalPrefix + '/lib/node_modules');
+			next();
+		})
+		// }}}
 		// Calculate paths {{{
 		.then('paths', function(next) {
-			next(null, [].concat(
-				settings.local && settings.localPaths ? settings.localPaths.map(function(p) { return fspath.resolve(p) }) : [],
-				settings.global && settings.globalPaths ? settings.globalPaths.map(function(p) { return fspath.resolve(p) }) : []
-			));
+			next(null, _([])
+				.concat(
+					settings.local && settings.localPaths ? settings.localPaths.map(function(p) { return fspath.resolve(p) }) : [],
+					settings.global && settings.globalPaths ? settings.globalPaths.map(function(p) { return fspath.resolve(p) }) : []
+				)
+				.uniq()
+				.value()
+			);
 		})
 		// }}}
 		// Step 1 - search all paths and prepare a candidate list {{{
